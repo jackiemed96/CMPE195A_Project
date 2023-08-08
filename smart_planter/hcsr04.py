@@ -1,11 +1,12 @@
-from app import db, app
-from app.models import DistanceData
-import socket
-import time
+#from planter import db, create_app
+from planter import db, app
+from planter.models import WaterLevelData
+import socket, time
 
+#app = create_app()
 bufferSize = 1024
 
-serverAddress = ("192.168.0.91", 2222)
+serverAddress = ("192.168.0.90", 2222)
 
 UDPClient = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -19,7 +20,7 @@ while (True):
     
     with app.app_context():
         db.create_all()
-        distance = DistanceData(distance = data)
+        distance = WaterLevelData(distance = data)
         db.session.add(distance)
         db.session.commit()
 

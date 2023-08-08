@@ -1,11 +1,12 @@
-from app import db, app
-from app.models import SensorData
-import socket
-import time
+#from planter import db, create_app
+from planter import db, app
+from planter.models import WeatherData
+import socket, time
 
+#app = create_app()
 bufferSize = 1024
 
-serverAddress = ("192.168.0.91", 2223) #(IP, PORT); IP may vary
+serverAddress = ("192.168.0.90", 2223) #(IP, PORT); IP may vary
 
 UDPClient = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -21,7 +22,7 @@ while (True):
     with app.app_context():
         db.create_all()
         dataArray[0] = (float(dataArray[0]) * 1.8) + 32
-        newSensData = SensorData(temp = dataArray[0], humidity = dataArray[1])
+        newSensData = WeatherData(temp = dataArray[0], humidity = dataArray[1])
         db.session.add(newSensData)
         db.session.commit()
 
@@ -31,4 +32,4 @@ while (True):
     if (len(dataArray) == 2):
         print("Temperature: ", dataArray[0], " Humidity: ", dataArray[1])
 
-    time.sleep(5)
+    time.sleep(3)
