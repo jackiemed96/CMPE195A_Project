@@ -1,32 +1,33 @@
-{% extends "base.html" %} {% block title %}Add Plant{% endblock %} {% block
-content %}
-<h1 align="center">Plants</h1>
-<ul class="list-group list-group-flush" id="plants">
-	{% for plant in plants %}
-	<div class="list-group-item">
-		<label>Plant name:</label>
-		<li>{{ plant.plant_name }}</li>
-	</div>
-	<div class="list-group-item">
-		<label>Previous temperature:</label>
-		<li>{{ plant.previous_temp }}</li>
-	</div>
-	<div class="list-group-item">
-		<label>Current temperature:</label>
-		<li>{{ plant.current_temp }}</li>
-	</div>
-	<div class="list-group-item">
-		<label>Humidity:</label>
-		<li>{{ plant.humidity }}</li>
-	</div>
-	<div class="list-group-item">
-		<label>Water Level:</label>
-		<li>{{ plant.water_level }}</li>
-	</div>
-	<div class="list-group-item">
-		<label>Date:</label>
-		<li>{{ plant.date }}</li>
-	</div>
-	{% endfor %}
-</ul>
+{% extends "base.html" %}
+{% block title %}Current Plants{% endblock %}
+{% block content %}
+<h1 align="center">Current Plants</h1>
+<div id="plants">
+    {% for plant in plants %}
+    <div class="plant-details">
+        <h2 class="centered">{{ plant.plant_name }}</h2>
+        <h4>Sensor Readings</h4>
+        <ul class="plant-traits">
+            <li><strong>Previous temperature:</strong> {{ plant.previous_temp }}</li>
+            <li><strong>Current temperature:</strong> {{ plant.current_temp }}</li>
+            <li><strong>Humidity:</strong> {{ plant.humidity }}</li>
+            <li><strong>Water Level:</strong> {{ plant.water_level }}</li>
+            <li><strong>Last Updated:</strong> {{ plant.date }}</li>
+        </ul>
+        <h4>Current Care Plan</h4>
+        <ul>
+            <li><strong>Daily Water Sips:</strong> *sips*</li>
+            <li><strong>Ideal Temperature:</strong> its freezing</li>
+            <li><strong>Ideal Humidity:</strong> very moist</li>
+        </ul>
+    </div>
+    {% endfor %}
+</div>
+<style>
+    .centered {
+        text-align: center;
+    }
+</style>
 {% endblock %}
+
+
