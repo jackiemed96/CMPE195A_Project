@@ -1,6 +1,6 @@
 #from planter import db, create_app
 from planter import db, app
-from planter.models import WeatherData
+from planter.models import WeatherData, WaterLevelData
 import socket, time
 
 #app = create_app()
@@ -9,6 +9,8 @@ bufferSize = 1024
 serverAddress = ("192.168.0.90", 2223) #(IP, PORT); IP may vary
 
 UDPClient = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+
+print("Client ready to recieve data . . .")
 
 while (True):
     cmd = "GO"
@@ -23,13 +25,15 @@ while (True):
         db.create_all()
         dataArray[0] = (float(dataArray[0]) * 1.8) + 32
         newSensData = WeatherData(temp = dataArray[0], humidity = dataArray[1])
+        distance = WaterLevelData(distance = dataArray[2])
         db.session.add(newSensData)
+        db.session.add(distance)
         db.session.commit()
 
     if (len(dataArray) == 1):
         print("No data")
     
-    if (len(dataArray) == 2):
-        print("Temperature: ", dataArray[0], " Humidity: ", dataArray[1])
+    if (len(dataArray) == 3):
+        print("Temperature: ", dataArray[0], "Humidity:", dataArray[1], "% Water Level: ", dataArray[2], "inches")
 
-    time.sleep(3)
+    time.sleep(1)
