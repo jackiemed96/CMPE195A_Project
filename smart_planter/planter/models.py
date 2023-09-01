@@ -1,24 +1,44 @@
-from flask_login import UserMixin
-from sqlalchemy.sql import func
+from datetime import datetime
 
-from . import db
+from flask_login import UserMixin
+from flask_sqlalchemy import SQLAlchemy
+
+db = SQLAlchemy()
+
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(150), unique=True)
     password = db.Column(db.String(150))
     first_name = db.Column(db.String(150))
-    plants = db.relationship("Plant")
+
+    def __repr__(self):
+        return f'User: {self.first_name} with email: {self.email}'
+
+
+class UserPlants(db.Model):
+    '''Stores the searched plants by the user.'''
+    __tablename__ = 'user_plants'
+    id = db.Column(db.Integer, primary_key=True)
+    user = db.Column(db.Integer, db.ForeignKey('user.id'))
+    plant = db.Column(db.String(200), db.ForeignKey('plants.name'))
+    searched_date_and_time = db.Column(db.DateTime, default=datetime.utcnow)
+
 
 class Plant(db.Model):
+    __tablename__ = 'plants'
     id = db.Column(db.Integer, primary_key=True)
-    previous_temp = db.Column(db.Float)
-    current_temp = db.Column(db.Float)
-    humidity = db.Column(db.Float)
-    water_level = db.Column(db.Float)
-    plant_name = db.Column(db.String(150))
-    date = db.Column(db.DateTime(timezone=True), default=func.now())
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    name = db.Column(db.String(200), unique=True)
+    scientific_name = db.Column(db.String(200), unique=True)
+    description = db.Column(db.String(600))
+    soil = db.Column(db.String(600))
+    water = db.Column(db.String(600))
+    sunlight_requirements = db.Column(db.String(200))
+    minimum_cold_hardiness = db.Column(db.String)
+
+    def __repr__(self):
+        return f'Plant name: {self.name} Scientific name: {self.scientific_name}'
+
 
 class WeatherData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -27,10 +47,11 @@ class WeatherData(db.Model):
 
     def __repr__(self):
         return f'''Temp: {self.temp}F Humidity: {self.humidity}'''
-    
+
+
 class WaterLevelData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     distance = db.Column(db.Integer)
 
     def __repr__(self):
-        return f'''Distance: {self.distance}inches'''    
+        return f'''Distance: {self.distance}inches'''

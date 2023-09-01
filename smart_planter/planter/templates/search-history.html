@@ -1,0 +1,17 @@
+{% extends "base.html" %} {% block title %}Saved Searched Plants{% endblock %} {% block
+content %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Plant Name</th>
+      <th scope="col">Searched Date and Time</th>
+    </tr>
+  </thead>
+  {% for item in history %}
+  <tbody>
+    <td>{{ item.plant }}</td>
+    <td>{{ item.searched_date_and_time }}</td>
+  </tbody>
+  {% endfor %}
+</table>
+{% endblock %}
