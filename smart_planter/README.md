@@ -16,9 +16,13 @@ python -m pip install pipenv
 pipenv install
 ```
 
-## Running The App
+## Seeding the database and running the app
 
 ```bash
+# seed the database
+python seed_db.py
+
+# run the app
 python run.py
 ```
 

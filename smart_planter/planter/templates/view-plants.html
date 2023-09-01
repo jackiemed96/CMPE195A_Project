@@ -2,31 +2,31 @@
 content %}
 <h1 align="center">Plants</h1>
 <ul class="list-group list-group-flush" id="plants">
-	{% for plant in plants %}
-	<div class="list-group-item">
-		<label>Plant name:</label>
-		<li>{{ plant.plant_name }}</li>
-	</div>
-	<div class="list-group-item">
-		<label>Previous temperature:</label>
-		<li>{{ plant.previous_temp }}</li>
-	</div>
-	<div class="list-group-item">
-		<label>Current temperature:</label>
-		<li>{{ plant.current_temp }}</li>
-	</div>
-	<div class="list-group-item">
-		<label>Humidity:</label>
-		<li>{{ plant.humidity }}</li>
-	</div>
-	<div class="list-group-item">
-		<label>Water Level:</label>
-		<li>{{ plant.water_level }}</li>
-	</div>
-	<div class="list-group-item">
-		<label>Date:</label>
-		<li>{{ plant.date }}</li>
-	</div>
-	{% endfor %}
+
+	<table class="table">
+		<thead>
+			<tr>
+				<th scope="col">Name</th>
+				<th scope="col">Scientific Name</th>
+				<th scope="col">Description</th>
+				<th scope="col">Soil</th>
+				<th scope="col">Water</th>
+				<th scope="col">Sunlight Requirements</th>
+				<th scope="col">Minimum cold hardiness</th>
+			</tr>
+		</thead>
+		{% for plant in plants %}
+		<tbody>
+			<td>{{ plant.name }}</td>
+			<td>{{ plant.scientific_name }}</td>
+			<td>{{ plant.description }}</td>
+			<td>{{ plant.soil }}</td>
+			<td>{{ plant.water }}</td>
+			<td>{{ plant.sunlight_requirements }}</td>
+			<td>{{ plant.minimum_cold_hardiness }}</td>
+		</tbody>
+		{% endfor %}
+	</table>
+
 </ul>
 {% endblock %}
