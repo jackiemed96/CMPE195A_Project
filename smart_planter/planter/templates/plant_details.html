@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% block title %} Plant Details {% endblock %} 
+{% block content %}
+    <h1>{{ plant.plant_name }} Details</h1>
+    <p>Previous Temperature: {{ plant.previous_temp }} </p>
+    <p>Current Temperature: {{ plant.current_temp }} </p>
+    <p>Humidity: {{ plant.humidity }} </p>
+    <p>Water Level: {{ plant.water_level }} </p>
+
+    <a href="{{ url_for('views.home') }}">Back to Home</a>
+    
+{% endblock %}

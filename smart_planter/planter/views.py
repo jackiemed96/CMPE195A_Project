@@ -71,8 +71,8 @@ def sign_up():
 @views.route("/", methods=["GET"])
 @login_required
 def home():
-    plants = Plant.query.all()
-    return render_template("home.html", user=current_user, plants=plants)
+    user_plants = Plant.query.filter_by(user_id=current_user.id).all()
+    return render_template("home.html", user=current_user, plants=user_plants)
 
 
 @views.route("/delete-plant", methods=["POST"])
@@ -126,6 +126,7 @@ def add_plants():
                 current_temp=current_temp,
                 humidity=humidity,
                 water_level=water_level,
+                user_id=current_user.id
             )
 
             db.session.add(plant)
@@ -140,3 +141,16 @@ def add_plants():
 def view_plants():
     plants = Plant.query.all()
     return render_template("view-plants.html", user=current_user, plants=plants)
+
+
+@views.route("/plant/<int:plant_id>", methods=["GET"])
+@login_required
+def plant_details(plant_id):
+    plant = Plant.query.get(plant_id)
+
+    if plant:
+        return render_template("plant_details.html", user=current_user, plant=plant)
+    else:
+        flash("Plant not found!", category="error")
+        return redirect(url_for("views.home"))
+    

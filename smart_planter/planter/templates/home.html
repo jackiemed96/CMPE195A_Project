@@ -1,12 +1,14 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-%}
-<h1 align="center">Plants</h1>
-<p>Welcome to my planter</p>
-<p>The following is a list of plants</p>
+{% extends "base.html" %} 
+{% block title %}Home{% endblock %} 
+{% block content%}
+<h1 align="center">My Planter</h1>
+<p>Welcome to my planter, {{current_user.first_name}}!</p>
+<p>The following is a list of your plants</p>
 <ul class="list-group list-group-flush" id="plants">
 	{% for plant in plants %}
-	<li class="list-group-item">{{ plant.plant_name }}</li>
+	<li class="list-group-item">
+		<a href="{{ url_for('views.plant_details', plant_id=plant.id) }}">{{ plant.plant_name }} </a>
+	</li>
 	{% endfor %}
 </ul>
-
 {% endblock %}

@@ -18,7 +18,7 @@ class Plant(db.Model):
     water_level = db.Column(db.Float)
     plant_name = db.Column(db.String(150))
     date = db.Column(db.DateTime(timezone=True), default=func.now())
-    user_id = db.Column(db.Integer, db.ForeignKey("user.id"))
+    user_id = db.Column(db.Integer, db.ForeignKey("user.id"), nullable=False)
 
 class WeatherData(db.Model):
     id = db.Column(db.Integer, primary_key=True)
