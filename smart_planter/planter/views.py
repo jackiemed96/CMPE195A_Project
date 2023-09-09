@@ -1,13 +1,14 @@
 import json
 
-from flask import Blueprint, flash, jsonify, render_template, request, url_for, redirect
+from flask import (Blueprint, flash, jsonify, redirect, render_template,
+                   request, session, url_for)
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from . import db
-from .models import Plant, User
+from planter.models import Plant, User, UserPlants, db
 
 views = Blueprint("views", __name__)
+
 
 @views.route("/login", methods=["GET", "POST"])
 def login():
@@ -34,6 +35,7 @@ def login():
 def logout():
     logout_user()
     return redirect(url_for("views.login"))
+
 
 @views.route("/sign-up", methods=["GET", "POST"])
 def sign_up():
@@ -68,6 +70,7 @@ def sign_up():
 
     return render_template("sign-up.html", user=current_user)
 
+
 @views.route("/", methods=["GET"])
 @login_required
 def home():
@@ -96,43 +99,30 @@ def search_plant():
     if request.method == "POST":
         if request.form:
             plant_name = request.form.get("plant_name")
-            print(f"Plant name: {plant_name}")
-            plant = Plant.query.filter_by(plant_name=plant_name).first()
-            print(f"Plant name: {plant}")
+            plant: Plant = Plant.query.filter_by(name=plant_name).first()
 
             if plant:
-                flash(f"Plant '{plant.plant_name}' found!", category="success")
+                flash(f"Plant '{plant.name}' found!", category="success")
+                # save the plant searched to the user's history
+                user_plant = UserPlants(
+                    user=session.get("_user_id"), plant=plant.name)
+                db.session.add(user_plant)
+                db.session.commit()
+
+                # we need to redirect to show plant information
+                return render_template('view-plant.html', user=current_user, plant=plant)
+
             else:
                 flash("Plant not found!", category="error")
 
     return render_template("search-plant.html", user=current_user)
 
 
-@views.route("/add-plants", methods=["GET", "POST"])
+@views.route("/search-history", methods=["GET"])
 @login_required
-def add_plants():
-    if request.method == "POST":
-        if request.form:
-            plant_name = request.form.get("plant_name")
-            previous_temp = request.form.get("previous_temp")
-            current_temp = request.form.get("current_temp")
-            humidity = request.form.get("humidity")
-            water_level = request.form.get("water_level")
-
-            # add the plant information
-            plant = Plant(
-                plant_name=plant_name,
-                previous_temp=previous_temp,
-                current_temp=current_temp,
-                humidity=humidity,
-                water_level=water_level,
-            )
-
-            db.session.add(plant)
-            db.session.commit()
-            flash("Plant added", category="success")
-
-    return render_template("add-plant.html", user=current_user)
+def searched_plants_user_history():
+    history = UserPlants.query.filter_by(user=session.get("_user_id")).all()
+    return render_template('search-history.html', user=current_user, history=history)
 
 
 @views.route("/view-plants", methods=["GET"])
