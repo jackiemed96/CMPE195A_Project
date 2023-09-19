@@ -1,12 +1,18 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-%}
-<h1 align="center">Plants</h1>
-<p>Welcome to my planter</p>
-<p>The following is a list of plants supported</p>
-<ul class="list-group list-group-flush" id="plants">
-	{% for plant in plants %}
-	<li class="list-group-item">{{ plant.name }}</li>
-	{% endfor %}
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<h1 align="center">Home Page</h1>
+<p>List of Plants from user plant database</p>
+<ul class="list-group list-group-flush" id="user_plants">
+    {% for user_plant in plants %}
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+        {{ user_plant.plant }}
+        <form method="POST" action="/delete-plant" style="display:inline;">
+            <input type="hidden" name="plant_id" value="{{ user_plant.id }}">
+            <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+        </form>
+    </li>
+    {% endfor %}
 </ul>
-
 {% endblock %}
+

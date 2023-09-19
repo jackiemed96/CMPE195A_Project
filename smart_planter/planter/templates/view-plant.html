@@ -1,5 +1,6 @@
-{% extends "base.html" %} {% block title %}Search Plant{% endblock %} {% block
-content %}
+{% extends "base.html" %} 
+{% block title %}Search Plant{% endblock %} 
+{% block content %}
 <table class="table">
   <thead>
     <tr>
@@ -10,16 +11,27 @@ content %}
       <th scope="col">Water</th>
       <th scope="col">Sunlight Requirements</th>
       <th scope="col">Minimum cold hardiness</th>
+      <th scope="col"></th> <!-- New column for the button -->
     </tr>
   </thead>
   <tbody>
-    <td>{{ plant.name }}</td>
-    <td>{{ plant.scientific_name }}</td>
-    <td>{{ plant.description }}</td>
-    <td>{{ plant.soil }}</td>
-    <td>{{ plant.water }}</td>
-    <td>{{ plant.sunlight_requirements }}</td>
-    <td>{{ plant.minimum_cold_hardiness }}</td>
+    <tr>
+      <td>{{ plant.name }}</td>
+      <td>{{ plant.scientific_name }}</td>
+      <td>{{ plant.description }}</td>
+      <td>{{ plant.soil }}</td>
+      <td>{{ plant.water }}</td>
+      <td>{{ plant.sunlight_requirements }}</td>
+      <td>{{ plant.minimum_cold_hardiness }}</td>
+      <td>
+        <form method="POST" action="/add-to-user-plants">
+          <input type="hidden" name="plant_id" value="{{ plant.id }}">
+          <input type="hidden" name="plant_name" value="{{ plant.name }}">
+          <button type="submit" class="btn btn-primary">Add to Collection</button>
+      </form>
+      
+      </td>
+    </tr>
   </tbody>
 </table>
 {% endblock %}
