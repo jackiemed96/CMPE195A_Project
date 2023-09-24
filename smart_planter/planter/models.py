@@ -15,7 +15,6 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f'User: {self.first_name} with email: {self.email}'
 
-
 class UserPlants(db.Model):
     '''Stores the searched plants by the user.'''
     __tablename__ = 'user_plants'
