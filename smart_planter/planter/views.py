@@ -76,6 +76,7 @@ def sign_up():
 @views.route("/", methods=["GET"])
 @login_required
 def home():
+
     user_plants = UserPlants.query.all()
 
     # Retrieve the current plant for the logged-in user
