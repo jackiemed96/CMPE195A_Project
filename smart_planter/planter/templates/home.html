@@ -1,12 +1,43 @@
-{% extends "base.html" %} {% block title %}Home{% endblock %} {% block content
-%}
-<h1 align="center">Plants</h1>
-<p>Welcome to my planter</p>
-<p>The following is a list of plants supported</p>
-<ul class="list-group list-group-flush" id="plants">
-	{% for plant in plants %}
-	<li class="list-group-item">{{ plant.name }}</li>
-	{% endfor %}
-</ul>
+{% extends "base.html" %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<style>
+    .current-plant-box {
+        border: 1px solid #ccc;
+        padding: 10px;
+        margin-bottom: 20px;
+        background-color: #ffffff; /* White background color */
+    }
+</style>
 
+
+<h1 align="center">Home Page</h1>
+{% if current_plant and current_plant.current == 1 %}
+    <div class="current-plant-box">
+        <h2>Current Plant:</h2>
+        <ul>
+            <li><strong>Name:</strong> {{ current_plant.plant }}</li>
+            <li><strong>Date Added:</strong> {{ current_plant.date_added.strftime("%m/%d/%Y %H:%M:%S") }}</li>
+        </ul>
+        
+    </div>
+{% endif %}
+<p><strong>List of Plants from user plant database</strong></p>
+<ul class="list-group list-group-flush" id="user_plants">
+    {% for user_plant in plants %}
+        <li class="list-group-item d-flex justify-content-between align-items-center">
+            {{ user_plant.plant }}
+            <div class="btn-group" role="group" aria-label="Actions">
+                <form method="POST" action="/set-current-plant">
+                    <input type="hidden" name="current_plant" value="{{ user_plant.plant }}">
+                    <button type="submit" class="btn btn-primary btn-sm">Set as Current</button>
+                </form>
+                <form method="POST" action="/delete-plant">
+                    <input type="hidden" name="plant_id" value="{{ user_plant.id }}">
+                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                </form>
+            </div>
+        </li>
+    {% endfor %}
+</ul>
 {% endblock %}

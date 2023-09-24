@@ -4,13 +4,13 @@ content %}
   <thead>
     <tr>
       <th scope="col">Plant Name</th>
-      <th scope="col">Searched Date and Time</th>
+      <th scope="col">Date added to your database</th>
     </tr>
   </thead>
   {% for item in history %}
   <tbody>
     <td>{{ item.plant }}</td>
-    <td>{{ item.searched_date_and_time }}</td>
+    <td>{{ item.date_added.strftime("%m/%d/%Y %H:%M:%S") }}</td>    
   </tbody>
   {% endfor %}
 </table>

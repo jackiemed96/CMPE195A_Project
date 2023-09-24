@@ -1,19 +1,50 @@
-{% extends "base.html" %} {% block title %}Search Plant{% endblock %} {% block
-content %}
+{% extends "base.html" %}
+
+{% block title %}Search Plant{% endblock %}
+
+{% block content %}
 <h1 align="center">Search Plants</h1>
 <form method="POST" action="/search">
-	<div class="form-group">
-		<label for="plant_name">Plant Name</label>
-		<input
-			type="text"
-			class="form-control"
-			id="plant_name"
-			name="plant_name"
-			placeholder="Enter plant name"
-		/>
-	</div>
-	<div align="center">
-		<button type="submit" class="btn btn-primary">Search Plant</button>
-	</div>
+    <div class="form-group">
+        <label for="plant_name">Plant Name</label>
+        <input
+            type="text"
+            class="form-control"
+            id="plant_name"
+            name="plant_name"
+            placeholder="Enter plant name"
+        />
+    </div>
+    <div align="center">
+        <button type="submit" class="btn btn-primary">Search Plant</button>
+    </div>
 </form>
+
+<h2>Plants</h2>
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Scientific Name</th>
+            <th scope="col">Description</th>
+            <th scope="col">Soil</th>
+            <th scope="col">Water</th>
+            <th scope="col">Sunlight Requirements</th>
+            <th scope="col">Minimum cold hardiness</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for plant in plants %}
+            <tr>
+                <td>{{ plant.name }}</td>
+                <td>{{ plant.scientific_name }}</td>
+                <td>{{ plant.description }}</td>
+                <td>{{ plant.soil }}</td>
+                <td>{{ plant.water }}</td>
+                <td>{{ plant.sunlight_requirements }}</td>
+                <td>{{ plant.minimum_cold_hardiness }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}
