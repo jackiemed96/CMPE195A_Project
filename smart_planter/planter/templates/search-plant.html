@@ -31,6 +31,7 @@
             <th scope="col">Water</th>
             <th scope="col">Sunlight Requirements</th>
             <th scope="col">Minimum cold hardiness</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -43,6 +44,12 @@
                 <td>{{ plant.water }}</td>
                 <td>{{ plant.sunlight_requirements }}</td>
                 <td>{{ plant.minimum_cold_hardiness }}</td>
+                <td class="text-right">
+                    <form method="POST" action="/add-to-user-plants">
+                        <input type="hidden" name="plant_name" value="{{ plant.name }}">
+                        <button type="submit" class="btn btn-primary">Add Plant to Collection</button>
+                    </form>
+                </td>
             </tr>
         {% endfor %}
     </tbody>

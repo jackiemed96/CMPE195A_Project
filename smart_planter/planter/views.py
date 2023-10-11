@@ -76,11 +76,8 @@ def sign_up():
 @views.route("/", methods=["GET"])
 @login_required
 def home():
-    user_plants = UserPlants.query.all()
-
-    # Retrieve the current plant for the logged-in user
+    user_plants = UserPlants.query.filter_by(user=current_user.id).all()
     current_plant = UserPlants.query.filter_by(user=current_user.id, current=True).first()
-
     return render_template("home.html", user=current_user, plants=user_plants, current_plant=current_plant)
 
 
@@ -107,7 +104,7 @@ def search_plant():
     if request.method == "POST":
         if request.form:
             plant_name = request.form.get("plant_name")
-            plant = Plant.query.filter_by(name=plant_name).first()
+            plant = Plant.query.filter(Plant.name.ilike(f"%{plant_name}%")).first()
 
             if plant:
                 flash(f"Plant '{plant.name}' found!", category="success")
@@ -174,6 +171,7 @@ def delete_plant():
 @views.route("/set-current-plant", methods=["POST"])
 def set_current_plant():
     plant_name = request.form.get("current_plant")
+    print(f"Received plant name: {plant_name}")
     user_plant = UserPlants.query.filter_by(user=current_user.id, plant=plant_name).first()
     
     # Unset the current plant for this user
