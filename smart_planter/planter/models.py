@@ -22,8 +22,10 @@ class UserPlants(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.Integer, db.ForeignKey('user.id'))
     plant = db.Column(db.String(200), db.ForeignKey('plants.name'))
-    date_added = db.Column(db.DateTime, default=datetime.utcnow)
-    current = db.Column(db.Boolean, default=0) 
+    date_added = db.Column(db.DateTime, default=datetime.now)
+    current = db.Column(db.Boolean, default=0)
+    
+
 
 class Plant(db.Model):
     __tablename__ = 'plants'

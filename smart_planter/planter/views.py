@@ -146,7 +146,7 @@ def add_to_collection():
         if not existing_user_plant:
             # Save the plant to the user's collection with added date
             user_plant = UserPlants(
-                user=current_user.id, plant=plant_name, date_added=datetime.utcnow())
+                user=current_user.id, plant=plant_name, date_added=datetime.now())
             db.session.add(user_plant)
             db.session.commit()
 
