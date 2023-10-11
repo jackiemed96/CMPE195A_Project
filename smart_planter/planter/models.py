@@ -24,7 +24,8 @@ class UserPlants(db.Model):
     plant = db.Column(db.String(200), db.ForeignKey('plants.name'))
     date_added = db.Column(db.DateTime, default=datetime.now)
     current = db.Column(db.Boolean, default=0)
-    
+    temperature = db.Column(db.Float)
+    humidity = db.Column(db.Float) 
 
 
 class Plant(db.Model):

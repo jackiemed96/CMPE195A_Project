@@ -5,7 +5,7 @@ from flask import (Blueprint, flash, jsonify, redirect, render_template,
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from planter.models import Plant, User, UserPlants, db
+from planter.models import Plant, User, UserPlants, WeatherData, WaterLevelData, db
 from datetime import datetime
 
 
@@ -78,7 +78,25 @@ def sign_up():
 def home():
     user_plants = UserPlants.query.filter_by(user=current_user.id).all()
     current_plant = UserPlants.query.filter_by(user=current_user.id, current=True).first()
-    return render_template("home.html", user=current_user, plants=user_plants, current_plant=current_plant)
+
+    # Get the latest water level data
+    latest_water_level = WaterLevelData.query.order_by(WaterLevelData.id.desc()).first()
+    latest_distance = latest_water_level.distance if latest_water_level else None
+
+    # Get the latest temperature and humidity values
+    latest_weather_data = WeatherData.query.order_by(WeatherData.id.desc()).first()
+    latest_temp = latest_weather_data.temp if latest_weather_data else None
+    latest_humidity = latest_weather_data.humidity if latest_weather_data else None
+
+    return render_template(
+        "home.html", 
+        user=current_user, 
+        plants=user_plants, 
+        current_plant=current_plant, 
+        latest_temp=latest_temp,
+        latest_humidity=latest_humidity,
+        latest_distance=latest_distance  # Pass the latest distance
+    )
 
 
 # @views.route("/delete-plant", methods=["POST"])
@@ -187,4 +205,25 @@ def set_current_plant():
         flash(f"Plant '{plant_name}' not found in your collection.", category="error")
 
     return redirect(url_for("views.home", current_plant=plant_name))
+
+@views.route("/update-temperature", methods=["GET"])
+@login_required
+def update_temperature():
+    print("Executing update_temperature route")
+    # Step 1: Retrieve the latest temperature reading
+    latest_weather_data = WeatherData.query.order_by(WeatherData.id.desc()).first()
+
+    # Step 2: Identify the current user and their associated current plant
+    current_user_id = current_user.id
+    current_plant = UserPlants.query.filter_by(user=current_user_id, current=True).first()
+
+    # Step 3: Update the UserPlants table
+    if current_plant and latest_weather_data:
+        current_plant.temperature = latest_weather_data.temp
+        db.session.commit()
+        flash(f"Temperature updated for {current_plant.plant}", category="success")
+    else:
+        flash("Unable to update temperature.", category="error")
+
+    return redirect(url_for("views.home"))
 

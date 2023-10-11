@@ -1,5 +1,7 @@
 {% extends "base.html" %}
+
 {% block title %}Home{% endblock %}
+
 {% block content %}
 <style>
     .current-plant-box {
@@ -10,16 +12,34 @@
     }
 </style>
 
-
 <h1 align="center">Home Page</h1>
+
 {% if current_plant and current_plant.current == 1 %}
     <div class="current-plant-box">
-        <h2>Current Plant:</h2>
+        <h2>Current Plant: <strong>{{ current_plant.plant }}</strong></h2>
         <ul>
-            <li><strong>Name:</strong> {{ current_plant.plant }}</li>
+            {% if latest_distance is not none %}
+            {% if latest_distance > 70 %}
+                <li style="color: red;"><strong>Water Tank Status: </strong> Refill water</li>
+            {% else %}
+                <li style="color: green;"><strong>Water Tank Status: </strong> Good</li>
+            {% endif %}
+        {% else %}
+            <li><strong>Water Level:</strong> No data available</li>
+        {% endif %}
+            {% if latest_temp is not none %}
+                <li><strong>Temperature:</strong> {{ latest_temp }}°F</li>
+            {% else %}
+                <li><strong>Temperature:</strong> No data available</li>
+            {% endif %}
+            {% if latest_humidity is not none %}
+                <li><strong>Humidity:</strong> {{ latest_humidity }}%</li>
+            {% else %}
+                <li><strong>Humidity:</strong> No data available</li>
+            {% endif %}
+
             <li><strong>Date Added:</strong> {{ current_plant.date_added.strftime("%m/%d/%Y %H:%M:%S") }}</li>
         </ul>
-        
     </div>
 {% endif %}
 
