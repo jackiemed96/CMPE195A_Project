@@ -1,6 +1,7 @@
 {% extends "base.html" %} {% block title %}Saved Searched Plants{% endblock %} {% block
 content %}
-<table class="table">
+<div class="container" style="margin-left: 100px;">
+<table class="table" style="font-size: larger;">
   <thead>
     <tr>
       <th scope="col">Plant Name</th>
@@ -10,8 +11,9 @@ content %}
   {% for item in history %}
   <tbody>
     <td>{{ item.plant }}</td>
-    <td>{{ item.date_added.strftime("%m/%d/%Y %H:%M:%S") }}</td>    
+    <td>{{ item.date_added.strftime("%m/%d/%Y %I:%H:%M:%S %p") }}</td>    
   </tbody>
   {% endfor %}
 </table>
+</div>
 {% endblock %}

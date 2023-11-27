@@ -12,7 +12,8 @@
 		<title>{% block title %}Home{% endblock %}</title>
 		<style>
 			body {
-				background-image: url('static/leaves-background.avif');
+				/* background-image: url('static/leaves-background.avif'); */
+				background-image: url('static/green_bg2.avif');
 			}
 		</style>
 	</head>
@@ -25,14 +26,13 @@
 			<div class="collapse navbar-collapse" id="navbar">
 				<div class="navbar-nav">
 					{% if user.is_authenticated %}
-					<a class="nav-item nav-link" id="home" href="/">Home</a>
-					<!-- <a class="nav-item nav-link" id="view-plants" href="/view-plants">View Plants</a> -->
-					<a class="nav-item nav-link" id="search-plants" href="/search">Search Plant</a>
-					<a class="nav-item nav-link" id="saved-plants" href="/search-history">"Search History"</a>
-					<a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+					<a class="nav-item nav-link" id="home" href="/" style="color:white">Home</a>
+					<a class="nav-item nav-link" id="search-plants" href="/search" style="color:white">Search Plant</a>
+					<a class="nav-item nav-link" id="saved-plants" href="/search-history" style="color:white">Search History</a>
+					<a class="nav-item nav-link" id="logout" href="/logout" style="color:white">Logout</a>
 					{% else %}
-					<a class="nav-item nav-link" id="login" href="/login">Login</a>
-					<a class="nav-item nav-link" id="signUp" href="/sign-up">Sign Up</a>
+					<a class="nav-item nav-link" id="login" href="/login" style="color:white">Login</a>
+					<a class="nav-item nav-link" id="signUp" href="/sign-up" style="color:white">Sign Up</a>
 					{% endif %}
 				</div>
 			</div>

@@ -6,7 +6,6 @@
 <h1 align="center">Search Plants</h1>
 <form method="POST" action="/search">
     <div class="form-group">
-        <label for="plant_name">Plant Name</label>
         <input
             type="text"
             class="form-control"
@@ -21,7 +20,7 @@
 </form>
 
 <h2>Plants</h2>
-<table class="table">
+<table class="table" style="font-size: larger; font-weight: 600; color: black;">
     <thead>
         <tr>
             <th scope="col">Name</th>
@@ -31,9 +30,10 @@
             <th scope="col">Water</th>
             <th scope="col">Sunlight Requirements</th>
             <th scope="col">Minimum cold hardiness</th>
+            <th scope="col">Actions</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody style="font-weight: 500; color: black; ">
         {% for plant in plants %}
             <tr>
                 <td>{{ plant.name }}</td>
@@ -43,6 +43,12 @@
                 <td>{{ plant.water }}</td>
                 <td>{{ plant.sunlight_requirements }}</td>
                 <td>{{ plant.minimum_cold_hardiness }}</td>
+                <td class="text-right">
+                    <form method="POST" action="/add-to-user-plants">
+                        <input type="hidden" name="plant_name" value="{{ plant.name }}">
+                        <button type="submit" class="btn btn-primary">Add Plant to Collection</button>
+                    </form>
+                </td>
             </tr>
         {% endfor %}
     </tbody>

@@ -35,6 +35,6 @@ while (True):
         print("No data")
     
     if (len(dataArray) == 3):
-        print("Temperature: ", dataArray[0], "Humidity:", dataArray[1], "% Water Level: ", dataArray[2], "inches")
+        print("Temperature: ", dataArray[0], "F, Humidity:", dataArray[1], "%, Water Level: ", dataArray[2], "inches")
 
     time.sleep(1)

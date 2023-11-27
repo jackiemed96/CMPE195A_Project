@@ -15,14 +15,22 @@ class User(db.Model, UserMixin):
     def __repr__(self):
         return f'User: {self.first_name} with email: {self.email}'
 
+
 class UserPlants(db.Model):
     '''Stores the searched plants by the user.'''
     __tablename__ = 'user_plants'
     id = db.Column(db.Integer, primary_key=True)
     user = db.Column(db.Integer, db.ForeignKey('user.id'))
     plant = db.Column(db.String(200), db.ForeignKey('plants.name'))
-    date_added = db.Column(db.DateTime, default=datetime.utcnow)
-    current = db.Column(db.Boolean, default=0) 
+    date_added = db.Column(db.DateTime, default=datetime.now)
+    current = db.Column(db.Boolean, default=0)
+    temperature = db.Column(db.Float)
+    humidity = db.Column(db.Float) 
+    plant_sun = db.Column(db.String(200), db.ForeignKey('plants.sunlight_requirements'))
+    plant_water = db.Column(db.String(200), db.ForeignKey('plants.water'))
+    plant_id = db.Column(db.String(200), db.ForeignKey('plants.id'))
+    
+    plant_info = db.relationship('Plant', foreign_keys=[plant])
 
 class Plant(db.Model):
     __tablename__ = 'plants'
@@ -34,6 +42,9 @@ class Plant(db.Model):
     water = db.Column(db.String(600))
     sunlight_requirements = db.Column(db.String(200))
     minimum_cold_hardiness = db.Column(db.String)
+    user_plants = db.relationship('UserPlants', foreign_keys=[UserPlants.plant], back_populates='plant_info')
+
+
 
     def __repr__(self):
         return f'Plant name: {self.name} Scientific name: {self.scientific_name}'
