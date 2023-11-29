@@ -55,7 +55,7 @@
     }
 </style>
 
-<h1 align="center" class="mb-3">Home Page</h1>
+<h1 align="center" class="mb-3 mt-3">Home Page</h1>
 
 {% if current_plant and current_plant.current == 1 %}
     <div class="current-plant-box">
@@ -99,7 +99,7 @@
                 style="background-color: transparent; color:black; border: 1px solid teal; font-weight:600;">
                 <details>
                     <summary>{{user_plant.plant}}</summary>
-                    <h6 style="font-weight: 300;">Description: {{user_plant.plant_info.description}}</h6>
+                    <h6 class="mt-2 "style="font-weight: 300;">Description: {{user_plant.plant_info.description}}</h6>
                     <h6 style="font-weight: 300">Sun requirements: {{user_plant.plant_info.sunlight_requirements}}</h6>
                 </details>
                     <div class="btn-group" role="group" aria-label="Actions">

@@ -3,7 +3,16 @@
 {% block title %}Search Plant{% endblock %}
 
 {% block content %}
-<h1 align="center">Search Plants</h1>
+
+<style>
+    body
+    {
+        background-image: url('static/green_bg2.avif');
+        background-size: cover;
+    }
+</style>
+
+<h1 align="center" class="mt-3">Search Plants</h1>
 <form method="POST" action="/search">
     <div class="form-group">
         <input
@@ -33,7 +42,7 @@
             <th scope="col">Actions</th>
         </tr>
     </thead>
-    <tbody style="font-weight: 500; color: black; ">
+    <tbody style="font-weight: 500; color: black;">
         {% for plant in plants %}
             <tr>
                 <td>{{ plant.name }}</td>
