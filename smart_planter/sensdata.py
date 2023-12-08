@@ -7,7 +7,8 @@ bufferSize = 1024
 
 # we may consider getting the IP and PORT from environment variables if they vary
 # in the future we will implement reading from .env using python_dotnev module
-serverAddress = ("192.168.0.90", 2223)  # (IP, PORT); IP may vary
+#serverAddress = ("192.168.0.90", 2223)  # (IP, PORT); IP may vary
+serverAddress = ("10.42.0.3", 2223)  # (IP, PORT); IP may vary
 
 UDPClient = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
@@ -37,4 +38,4 @@ while (True):
     if (len(dataArray) == 3):
         print("Temperature: ", dataArray[0], "F, Humidity:", dataArray[1], "%, Water Level: ", dataArray[2], "inches")
 
-    time.sleep(1)
+    time.sleep(10)

@@ -1,31 +1,24 @@
 # Smart Planter Flask App
 
-## Setup & Installation
+#### Setup & Installation
+1. Before beginning, clone repository via SSH or HTTPS at this link:
+https://github.com/jackiemed96/CMPE195A_Project
 
-Make sure you have the latest version of Python installed. In this case, we use Python `3.11`
+2. Install Python3:
+```sudo apt-get install python3```
+3. Install Flask and Required Extensions:
+```pip install Flask```
+```pip install flask-wtf flask-sqlalchemy flask-login```
+4. Install Dependencies for reading data from plant file:
+```pip install xlrd openpyxl```
 
-Additionally, ensure you have `pipenv` installed, if not, use the following command.
+#### Creating Plant Database
+1. Navigate to the ```smartplanter``` directory
+2. Convert Plant information Excel file into SQLAlchemy database
+```python3 seed_db.py```
 
-```bash
-python -m pip install pipenv
-```
-
-## Install dependencies
-
-```bash
-pipenv install
-```
-
-## Seeding the database and running the app
-
-```bash
-# seed the database
-python seed_db.py
-
-# run the app
-python run.py
-```
-
-## Viewing The App
-
-Go to `http://127.0.0.1:5000`
+#### Running Flask Application
+1. In ```smartplanter``` directory, start Flask Application:
+```python3 run.py```
+2. Open web browser and go to:
+```http://127.0.0.1:5000```

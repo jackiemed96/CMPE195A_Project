@@ -63,7 +63,7 @@
         <form action="" method="POST"> 
         <ul>
             {% if latest_distance is not none %}
-            {% if latest_distance > 70 %}
+            {% if latest_distance > 8 %}
                 <li style="color: red; display: inline-block; background-color: white;"><strong>Water Tank Status: </strong> Refill water</li>
             {% else %}
                 <li style="color: green; display: inline-block; background-color: white;"><strong>Water Tank Status: </strong> Good</li>
@@ -72,7 +72,7 @@
             <li><strong>Water Level:</strong> No data available</li>
         {% endif %}
             {% if latest_temp is not none %}
-                <li><strong>Temperature:</strong> {{ latest_temp }}°F</li>
+                <li><strong>Temperature:</strong> {{'%0.2f'| format(latest_temp|float)}}°F</li>
             {% else %}
                 <li><strong>Temperature:</strong> No data available</li>
             {% endif %}
