@@ -1,4 +1,5 @@
 # Smart Planter Flask App
+This SmartPlanter application provides a minimalistic website that allows first time gardeners to experience plant caring with little stress. There is plant information and environmental data as well as a plant database to browse through many different plants that someone might want to care for. 
 
 #### Setup & Installation
 1. Before beginning, clone repository via SSH or HTTPS at this link:
