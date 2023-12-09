@@ -38,4 +38,4 @@ while (True):
     if (len(dataArray) == 3):
         print("Temperature: ", dataArray[0], "F, Humidity:", dataArray[1], "%, Water Level: ", dataArray[2], "inches")
 
-    time.sleep(10)
+    time.sleep(30)
