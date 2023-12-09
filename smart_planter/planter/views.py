@@ -5,7 +5,9 @@ from flask import (Blueprint, flash, jsonify, redirect, render_template,
 from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from planter.models import Plant, User, UserPlants, db
+from planter.models import Plant, User, UserPlants, WeatherData, WaterLevelData, db
+from datetime import datetime
+
 
 views = Blueprint("views", __name__)
 
@@ -71,51 +73,82 @@ def sign_up():
     return render_template("sign-up.html", user=current_user)
 
 
-@views.route("/", methods=["GET"])
+@views.route("/", methods=["GET", "POST"])
 @login_required
 def home():
-    plants = Plant.query.all()
-    return render_template("home.html", user=current_user, plants=plants)
+    if (request.method == "POST"):
+        latest_water_level = WaterLevelData.query.order_by(WaterLevelData.id.desc()).first()
+        latest_distance = latest_water_level.distance if latest_water_level else None
+        
+        latest_weather_data = WeatherData.query.order_by(WeatherData.id.desc()).first()
+        latest_temp = latest_weather_data.temp if latest_weather_data else None
+        latest_humidity = latest_weather_data.humidity if latest_weather_data else None
+    
+        user_plants = UserPlants.query.filter_by(user=current_user.id).all()
+        current_plant = UserPlants.query.filter_by(user=current_user.id, current=True).first()
+        
+        return render_template("home.html", user=current_user, plants=user_plants, current_plant=current_plant, 
+                               latest_temp=latest_temp, latest_humidity=latest_humidity,latest_distance=latest_distance)
+        
+    user_plants = UserPlants.query.filter_by(user=current_user.id).all()
+    current_plant = UserPlants.query.filter_by(user=current_user.id, current=True).first()
+
+    # Get the latest water level data
+    latest_water_level = WaterLevelData.query.order_by(WaterLevelData.id.desc()).first()
+    latest_distance = latest_water_level.distance if latest_water_level else None
+
+    # Get the latest temperature and humidity values
+    latest_weather_data = WeatherData.query.order_by(WeatherData.id.desc()).first()
+    latest_temp = latest_weather_data.temp if latest_weather_data else None
+    latest_humidity = latest_weather_data.humidity if latest_weather_data else None
+
+    # Get plant information for specific plant
+
+    return render_template(
+        "home.html", 
+        user=current_user, 
+        plants=user_plants, 
+        current_plant=current_plant, 
+        latest_temp=latest_temp,
+        latest_humidity=latest_humidity,
+        latest_distance=latest_distance  # Pass the latest distance
+    )
 
 
-@views.route("/delete-plant", methods=["POST"])
-def delete_plant():
-    plant = json.loads(
-        request.data
-    )  # this function expects a JSON from the INDEX.js file
-    plantId = Plant["plantId"]
-    plant = plant.query.get(plantId)
-    if plant:
-        if plant.user_id == current_user.id:
-            db.session.delete(plant)
-            db.session.commit()
+# @views.route("/delete-plant", methods=["POST"])
+# def delete_plant():
+#    plant = json.loads(
+#        request.data
+#    )  # this function expects a JSON from the INDEX.js file
+#    plantId = Plant["plantId"]
+#    plant = plant.query.get(plantId)
+#    if plant:
+#        if plant.user_id == current_user.id:
+#            db.session.delete(plant)
+#            db.session.commit()
 
-    return jsonify({})
+#    return jsonify({})
 
 
 @views.route("/search", methods=["GET", "POST"])
 @login_required
 def search_plant():
+    plants = Plant.query.all()
+
     if request.method == "POST":
         if request.form:
             plant_name = request.form.get("plant_name")
-            plant: Plant = Plant.query.filter_by(name=plant_name).first()
+            plant = Plant.query.filter(Plant.name.ilike(f"%{plant_name}%")).first()
 
             if plant:
                 flash(f"Plant '{plant.name}' found!", category="success")
-                # save the plant searched to the user's history
-                user_plant = UserPlants(
-                    user=session.get("_user_id"), plant=plant.name)
-                db.session.add(user_plant)
-                db.session.commit()
-
-                # we need to redirect to show plant information
                 return render_template('view-plant.html', user=current_user, plant=plant)
 
             else:
                 flash("Plant not found!", category="error")
 
-    return render_template("search-plant.html", user=current_user)
+    return render_template("search-plant.html", user=current_user, plants=plants)
+
 
 
 @views.route("/search-history", methods=["GET"])
@@ -130,3 +163,83 @@ def searched_plants_user_history():
 def view_plants():
     plants = Plant.query.all()
     return render_template("view-plants.html", user=current_user, plants=plants)
+
+@views.route("/add-to-user-plants", methods=["POST"])
+@login_required
+def add_to_collection():
+    if request.method == "POST":
+        plant_name = request.form.get("plant_name")
+
+        # Check if the user already has this plant in their collection
+        existing_user_plant = UserPlants.query.filter_by(
+            user=current_user.id, plant=plant_name).first()
+
+        if not existing_user_plant:
+            # Save the plant to the user's collection with added date
+            user_plant = UserPlants(
+                user=current_user.id, plant=plant_name, date_added=datetime.now())
+            db.session.add(user_plant)
+            db.session.commit()
+
+            flash(f"Plant '{plant_name}' added to collection!", category="success")
+        else:
+            flash(f"Plant '{plant_name}' is already in your collection", category="warning")
+        # Redirect back to the search page or wherever you want to go
+        return redirect(url_for("views.search_plant"))
+
+@views.route("/delete-plant", methods=["POST"])
+def delete_plant():
+    plant_id = request.form.get("plant_id")
+    user_plant = UserPlants.query.get(plant_id)
+
+    if user_plant and user_plant.user == current_user.id:
+        db.session.delete(user_plant)
+        db.session.commit()
+        flash("Plant deleted successfully!", category="success")
+    else:
+        flash("Unable to delete plant.", category="error")
+
+    return redirect(url_for("views.home"))
+
+
+@views.route("/set-current-plant", methods=["POST"])
+def set_current_plant():
+    plant_name = request.form.get("current_plant")
+    print(f"Received plant name: {plant_name}")
+    user_plant = UserPlants.query.filter_by(user=current_user.id, plant=plant_name).first()
+    
+    # Unset the current plant for this user
+    UserPlants.query.filter_by(user=current_user.id).update({"current": False})
+    
+    # Set the new current plant
+    if user_plant:
+        user_plant.current = 1
+        db.session.commit()
+
+        flash(f"Current plant set to '{plant_name}'!", category="success")
+    else:
+        flash(f"Plant '{plant_name}' not found in your collection.", category="error")
+
+    return redirect(url_for("views.home", current_plant=plant_name))
+
+@views.route("/update-temperature", methods=["GET"])
+@login_required
+def update_temperature():
+    print("Executing update_temperature route")
+    # Step 1: Retrieve the latest temperature reading
+    latest_weather_data = WeatherData.query.order_by(WeatherData.id.desc()).first()
+
+    # Step 2: Identify the current user and their associated current plant
+    current_user_id = current_user.id
+    current_plant = UserPlants.query.filter_by(user=current_user_id, current=True).first()
+
+    # Step 3: Update the UserPlants table
+    if current_plant and latest_weather_data:
+        current_plant.temperature = latest_weather_data.temp
+        db.session.commit()
+        flash(f"Temperature updated for {current_plant.plant}", category="success")
+    else:
+        flash("Unable to update temperature.", category="error")
+
+    return redirect(url_for("views.home"))
+
